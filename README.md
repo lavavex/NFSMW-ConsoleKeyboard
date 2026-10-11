@@ -4,6 +4,8 @@ Need for Speed: Most Wanted (2005) on PC asks you to *type* your alias. This
 script brings back the console version's on-screen keyboard instead, so you can
 name your profile with a controller, no keyboard needed.
 
+![The console keyboard in NFS Most Wanted PC](docs/keyboard.png)
+
 The keyboard was never removed from the PC game: its screen (`Keyboard.fng`)
 and code are still in `speed.exe`, just never opened. This mod opens it whenever
 the game starts text entry, then hands the name you picked back to the game as
@@ -39,8 +41,9 @@ Tested with the Xbox 360 Stuff Pack 4.2, Widescreen Fix, XtendedInput, HUD
 Adapter, HD Reflections, Front-End Shadows and HD Content Support, on Windows
 through Wine and on PS5 (prospero-win).
 
-Tested: creating an alias at first boot. Other text prompts go through the same
-path but haven't been tried yet. If the mod finds unexpected code at any of the
+Tested: naming the alias at first boot, and creating a profile from the profile
+manager. Other text prompts (the online ones) go through the same path but
+haven't been tried yet. If the mod finds unexpected code at any of the
 addresses it hooks (a different exe, or another mod hooking the same place) it
 hooks nothing and says so in the log.
 

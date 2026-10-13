@@ -61,8 +61,23 @@ hooks nothing and says so in the log.
 
 ## Building
 
-    make          # needs i686-w64-mingw32-gcc
-    make dist     # NFSMWConsoleKeyboard.zip
+You need the 32-bit MinGW-w64 GCC:
+
+- Debian/Ubuntu: `sudo apt install gcc-mingw-w64-i686 zip`
+- macOS: `brew install mingw-w64`
+- Windows: MSYS2, `pacman -S mingw-w64-i686-gcc make zip`
+
+Then:
+
+    git clone https://github.com/lavavex/NFSMW-ConsoleKeyboard
+    cd NFSMW-ConsoleKeyboard
+    make          # NFSMWConsoleKeyboard.asi
+    make dist     # NFSMWConsoleKeyboard.zip (scripts/ and README.txt)
+
+The build repeats: the same compiler gives the same bytes wherever you build. Releases
+are built by GitHub Actions (`.github/workflows/build.yml`), and each release's notes name
+the image and compiler with the SHA-256 of its files, so you can rebuild and compare.
+Another GCC version gives different bytes that do the same thing.
 
 ## License
 

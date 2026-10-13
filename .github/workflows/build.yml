@@ -1,0 +1,59 @@
+# Builds the plugin on every push and pull request; a version tag (v*) also publishes it as
+# a release with SHA256SUMS. The build repeats: the same compiler gives the same bytes, so
+# anyone can check a release against this source with the image and package named in its
+# notes.
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MinGW-w64 (i686)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q gcc-mingw-w64-i686 zip
+
+      - name: Build
+        run: |
+          make dist
+          {
+            sha256sum NFSMWConsoleKeyboard.asi NFSMWConsoleKeyboard.zip
+          } > SHA256SUMS
+          {
+            echo "Built by GitHub Actions on ${ImageOS:-ubuntu-24.04} ${ImageVersion:-}"
+            echo "Compiler: $(i686-w64-mingw32-gcc --version | head -1)"
+            echo "Package: gcc-mingw-w64-i686 $(dpkg-query -W -f='${Version}' gcc-mingw-w64-i686)"
+            echo
+            echo '```'
+            cat SHA256SUMS
+            echo '```'
+          } > build-notes.md
+          cat build-notes.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NFSMWConsoleKeyboard
+          path: |
+            NFSMWConsoleKeyboard.asi
+            NFSMWConsoleKeyboard.zip
+            SHA256SUMS
+            build-notes.md
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file build-notes.md \
+            NFSMWConsoleKeyboard.zip NFSMWConsoleKeyboard.asi SHA256SUMS
